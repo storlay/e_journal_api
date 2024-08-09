@@ -12,6 +12,10 @@ from sqlalchemy.orm import (
 
 from src.db.db import Base
 from src.db.mixins.pk import IntIdPkMixin
+from src.schemas.scores import (
+    ScoreSchema,
+    ScoresForStudentSchema,
+)
 from src.schemas.students import StudentSchema
 
 
@@ -49,7 +53,7 @@ class Students(Base, IntIdPkMixin):
     age: Mapped[int]
 
     scores: Mapped[list["Scores"]] = relationship(
-        "Students",
+        "Scores",
         back_populates="student",
     )
 
@@ -60,5 +64,15 @@ class Students(Base, IntIdPkMixin):
             first_name=self.first_name,
             last_name=self.last_name,
             age=self.age,
-            scores=self.scores,
+            scores=self.get_scores(),
         )
+
+    def get_scores(self) -> list[ScoresForStudentSchema]:
+        scores = []
+        for score in self.scores:  # type: ScoreSchema
+            score_info = ScoresForStudentSchema(
+                score=score.score,
+                date_of_receipt=score.date_of_receipt,
+            )
+            scores.append(score_info)
+        return scores
