@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "e-journal"
+version = "0.1.0"
+description = "API of the simplified version of the electronic journal for assessments."
+authors = ["Dmitrii Ivanov <dmitriy.site1@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.112.0"
+sqlalchemy = "^2.0.32"
+alembic = "^1.13.2"
+gunicorn = "^22.0.0"
+asyncpg = "^0.29.0"
+black = "^24.8.0"
+pydantic-settings = "^2.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
