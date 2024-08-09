@@ -1,0 +1,11 @@
+services:
+
+  api:
+    build:
+      context: ../
+    container_name: e_journal_api
+    env_file:
+      - ../.env
+    command: ./infra/commands/api.sh
+    ports:
+      - "8000:8000"
