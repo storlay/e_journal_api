@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.schemas.scores import ScoreSchema
+from src.schemas.scores import ScoresForStudentSchema
 
 
 class StudentSchema(BaseModel):
@@ -9,4 +9,4 @@ class StudentSchema(BaseModel):
     first_name: str
     last_name: str
     age: int
-    scores: list[ScoreSchema]
+    scores: list[ScoresForStudentSchema]
