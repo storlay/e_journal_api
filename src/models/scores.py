@@ -1,3 +1,5 @@
+from datetime import date
+
 from sqlalchemy import (
     CheckConstraint,
     ForeignKey,
@@ -24,9 +26,14 @@ class Scores(Base, IntIdPkMixin):
             "score >= 2 AND score <= 5",
             name="check_score",
         ),
+        CheckConstraint(
+            "date_of_receipt >= CURRENT_DATE",
+            name="check_date",
+        ),
     )
 
     score: Mapped[int] = mapped_column(SmallInteger)
+    date_of_receipt: Mapped[date]
     student_id: Mapped[int] = mapped_column(
         ForeignKey(
             "students.id",
