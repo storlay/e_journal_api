@@ -11,12 +11,14 @@ from sqlalchemy.orm import (
 
 from src.db.db import Base
 from src.db.mixins.pk import IntIdPkMixin
+from src.schemas.scores import ScoreSchema
 
 
 class Scores(Base, IntIdPkMixin):
     """
     Student scores model.
     """
+
     __table_args__ = (
         CheckConstraint(
             "score >= 2 AND score <= 5",
@@ -36,3 +38,10 @@ class Scores(Base, IntIdPkMixin):
         "Students",
         back_populates="scores",
     )
+
+    def to_read_model(self) -> ScoreSchema:
+        return ScoreSchema(
+            id=self.id,
+            score=self.score,
+            student_id=self.student_id,
+        )

@@ -12,6 +12,7 @@ from sqlalchemy.orm import (
 
 from src.db.db import Base
 from src.db.mixins.pk import IntIdPkMixin
+from src.schemas.students import StudentSchema
 
 
 class ClassNamesEnum(Enum):
@@ -24,6 +25,7 @@ class Students(Base, IntIdPkMixin):
     """
     Student model.
     """
+
     __table_args__ = (
         CheckConstraint(
             "age > 7",
@@ -50,3 +52,13 @@ class Students(Base, IntIdPkMixin):
         "Students",
         back_populates="student",
     )
+
+    def to_read_model(self) -> StudentSchema:
+        return StudentSchema(
+            id=self.id,
+            class_name=self.class_name,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            age=self.age,
+            scores=self.scores,
+        )

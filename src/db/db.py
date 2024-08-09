@@ -25,6 +25,8 @@ async_session = async_sessionmaker(
 
 
 class Base(DeclarativeBase):
+    id: None
+
     @declared_attr.directive
     @classmethod
     def __tablename__(cls) -> str:
@@ -39,3 +41,10 @@ class Base(DeclarativeBase):
             cls.__name__,
         ).lower()
         return name
+
+    def to_read_model(self):
+        """
+        Conversion to a pydantic model.
+        :return: Pydantic model.
+        """
+        pass
