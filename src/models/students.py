@@ -1,5 +1,3 @@
-from enum import Enum
-
 from sqlalchemy import (
     CheckConstraint,
     Enum as SQLAEnum,
@@ -12,17 +10,12 @@ from sqlalchemy.orm import (
 
 from src.db.db import Base
 from src.db.mixins.pk import IntIdPkMixin
+from src.models.utils import ClassNamesEnum
 from src.schemas.scores import (
     ScoreSchema,
     ScoresForStudentSchema,
 )
 from src.schemas.students import StudentSchema
-
-
-class ClassNamesEnum(Enum):
-    MATH: str = "Math"
-    SCIENCE: str = "Science"
-    ART: str = "Art"
 
 
 class Students(Base, IntIdPkMixin):
