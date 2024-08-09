@@ -1,4 +1,4 @@
-from typing import Type
+from typing import TypeVar
 
 from pydantic import BaseModel
 from sqlalchemy import (
@@ -12,9 +12,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.db import Base
 
+SCHEMA = TypeVar(
+    "SCHEMA",
+    bound=BaseModel,
+)
+MODEL = TypeVar(
+    "MODEL",
+    bound=Base,
+)
+
 
 class BaseRepository:
-    model: Type[Base] = None
+    model: MODEL = None
 
     def __init__(self, session: AsyncSession):
         """
@@ -29,11 +38,7 @@ class BaseRepository:
         :param data: Object data.
         :return: ID of the created object.
         """
-        statement = (
-            insert(self.model)
-            .values(**data)
-            .returning(self.model.id)
-        )
+        statement = insert(self.model).values(**data).returning(self.model.id)
         result = await self.session.execute(statement)
         return result.scalar_one()
 
@@ -43,10 +48,7 @@ class BaseRepository:
         :param obj_id: Object ID.
         :return: None.
         """
-        statement = (
-            delete(self.model)
-            .filter_by(id=obj_id)
-        )
+        statement = delete(self.model).filter_by(id=obj_id)
         await self.session.execute(statement)
 
     async def edit_one(self, obj_id: int, data: dict) -> int:
@@ -65,20 +67,17 @@ class BaseRepository:
         result = await self.session.execute(statement)
         return result.scalar_one()
 
-    async def find_one(self, **filter_by) -> Type[BaseModel]:
+    async def find_one(self, **filter_by) -> SCHEMA:
         """
         Search for an object by filters in the database.
         :param filter_by: Filters.
         :return: Object model.
         """
-        statement = (
-            select(self.model)
-            .filter_by(**filter_by)
-        )
+        statement = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(statement)
         return result.scalar_one().to_read_model()
 
-    async def find_all(self) -> list[Type[BaseModel]]:
+    async def find_all(self) -> list[SCHEMA]:
         """
         Getting all objects from the database.
         :return: List of objects models.
