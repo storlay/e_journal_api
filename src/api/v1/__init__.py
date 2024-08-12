@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 
+from src.api.v1.scores import router as scores_router
 from src.api.v1.students import router as students_router
 
 routers = (
+    scores_router,
     students_router,
 )
 
