@@ -50,5 +50,6 @@ class Scores(Base, IntIdPkMixin):
         return ScoreSchema(
             id=self.id,
             score=self.score,
+            date_of_receipt=self.date_of_receipt,
             student_id=self.student_id,
         )
