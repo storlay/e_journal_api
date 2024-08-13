@@ -19,9 +19,3 @@ services:
       - ../.env.test
     ports:
       - "5433:5432"
-    volumes:
-      - test_postgres_data:/var/lib/postgresql/data
-
-
-volumes:
-  test_postgres_data:
