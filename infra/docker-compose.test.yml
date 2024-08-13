@@ -1,0 +1,27 @@
+services:
+
+  api:
+    build:
+      context: ../
+    container_name: test_e_journal_api
+    env_file:
+      - ../.env.test
+    command: [ "./infra/commands/api.sh", "test" ]
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    container_name: test_e_journal_db
+    env_file:
+      - ../.env.test
+    ports:
+      - "5433:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  test_postgres_data:
