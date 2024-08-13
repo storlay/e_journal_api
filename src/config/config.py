@@ -1,4 +1,5 @@
 import os
+from typing import Literal
 
 from pydantic import (
     BaseModel,
@@ -37,6 +38,8 @@ class DatabaseSettings(BaseModel):
 
 class Settings(BaseSettings):
     db: DatabaseSettings = DatabaseSettings()
+
+    MODE: Literal["DEV", "TEST", "PROD"] = os.getenv("MODE", "TEST")
 
 
 settings = Settings()
