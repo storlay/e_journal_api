@@ -27,7 +27,7 @@ class Scores(Base, IntIdPkMixin):
             name="check_score",
         ),
         CheckConstraint(
-            "date_of_receipt >= CURRENT_DATE",
+            "date_of_receipt <= CURRENT_DATE",
             name="check_date",
         ),
     )
