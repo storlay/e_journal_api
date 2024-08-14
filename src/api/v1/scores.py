@@ -77,7 +77,7 @@ async def get_score(
 )
 async def add_score(
     transaction: TransactionDep,
-    score_data: AddScoreSchema = Depends(),
+    score_data: AddScoreSchema,
 ) -> ScoreIdSchema:
     """
     Adding a new score.
@@ -99,8 +99,8 @@ async def add_score(
 )
 async def update_score(
     transaction: TransactionDep,
+    new_score: UpdateScoreSchema,
     score_id: PathScoreIdSchema = Depends(),
-    new_score: UpdateScoreSchema = Depends(),
 ) -> ScoreIdSchema:
     """
     Updating a score by ID.

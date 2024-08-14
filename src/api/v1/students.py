@@ -77,7 +77,7 @@ async def get_student(
 )
 async def add_student(
     transaction: TransactionDep,
-    student_data: AddStudentSchema = Depends(),
+    student_data: AddStudentSchema,
 ) -> StudentIdSchema:
     """
     Adding a new student.
@@ -99,8 +99,8 @@ async def add_student(
 )
 async def update_student(
     transaction: TransactionDep,
+    student_data: UpdateStudentSchema,
     student_id: PathStudentIdSchema = Depends(),
-    student_data: UpdateStudentSchema = Depends(),
 ) -> StudentIdSchema:
     """
     Updating a student by ID.
