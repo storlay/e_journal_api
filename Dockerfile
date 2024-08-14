@@ -11,4 +11,4 @@ RUN poetry install --no-root
 
 COPY . .
 
-RUN chmod +x ./infra/commands/api.sh
+RUN chmod +x ./infra/commands/*.sh

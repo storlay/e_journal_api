@@ -6,7 +6,7 @@ services:
     container_name: e_journal_api
     env_file:
       - ../.env
-    command: [ "./infra/commands/api.sh", "dev" ]
+    command: ./infra/commands/api.sh
     ports:
       - "8000:8000"
     depends_on:

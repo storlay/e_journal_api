@@ -6,7 +6,7 @@ services:
     container_name: test_e_journal_api
     env_file:
       - ../.env.test
-    command: [ "./infra/commands/api.sh", "test" ]
+    command: "./infra/commands/test_api.sh"
     ports:
       - "8080:8080"
     depends_on:
