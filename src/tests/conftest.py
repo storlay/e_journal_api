@@ -1,4 +1,3 @@
-import asyncio
 from datetime import (
     date,
     timedelta,
@@ -14,7 +13,6 @@ from src.db.db import (
     async_session,
     Base,
 )
-from src.main import app
 from src.models.scores import Scores
 from src.models.students import Students
 from src.models.utils import ClassNamesEnum
@@ -80,21 +78,8 @@ async def prepare_database():
     assert settings.MODE == "TEST"
 
     async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-        yield
         await conn.run_sync(Base.metadata.drop_all)
-
-
-@pytest.fixture(scope="session")
-def event_loop(request):
-    """
-    Create an instance
-    of the default event loop
-    for each test case
-    """
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
+        await conn.run_sync(Base.metadata.create_all)
 
 
 @pytest.fixture(scope="function")
@@ -102,5 +87,8 @@ async def ac():
     """
     Async client for testing endpoints
     """
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    async with AsyncClient(base_url="http://localhost:8080") as ac:
         yield ac
+
+
+VALID_STUDENT_DATA: StudentsFactory = StudentsFactory()
