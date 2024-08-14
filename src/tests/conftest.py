@@ -18,8 +18,6 @@ from src.main import app
 from src.models.scores import Scores
 from src.models.students import Students
 from src.models.utils import ClassNamesEnum
-from src.tests.utils import factory_to_dict
-from src.utils.transaction import TransactionManager
 
 
 class StudentsFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -82,19 +80,9 @@ async def prepare_database():
     assert settings.MODE == "TEST"
 
     async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
-
-    async with TransactionManager() as transaction:
-        student = StudentsFactory()
-        student_dict = factory_to_dict(student)
-        student_id = await transaction.students_repo.add_one(student_dict)
-
-        score = ScoresFactory(student_id=student_id)
-        score_dict = factory_to_dict(score)
-        await transaction.scores_repo.add_one(score_dict)
-
-        await transaction.commit()
+        yield
+        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture(scope="session")
