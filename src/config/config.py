@@ -8,6 +8,10 @@ from pydantic import (
 from pydantic_settings import BaseSettings
 
 
+class APISettings(BaseModel):
+    V1_PREFIX: str = "/v1"
+
+
 class DatabaseSettings(BaseModel):
     NAME: str = os.getenv(
         "POSTGRES_DB",
@@ -37,6 +41,7 @@ class DatabaseSettings(BaseModel):
 
 
 class Settings(BaseSettings):
+    api: APISettings = APISettings()
     db: DatabaseSettings = DatabaseSettings()
 
     MODE: Literal["DEV", "TEST", "PROD"] = os.getenv("MODE", "TEST")
