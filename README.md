@@ -73,3 +73,25 @@ docker compose -f infra/docker-compose.dev.yml up --build
 - **Документация API** доступна по адресам:
     - http://127.0.0.1:8000/docs (Swagger)
     - http://127.0.0.1:8000/redoc (Redoc)
+
+## Запуск тестов
+
+1. Настройте доступ к базе данных в `.env.test`:
+
+```
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+```
+
+2. Запустите API в тестовом режиме с помощью Docker Compose:
+
+```
+docker compose -f infra/docker-compose.test.yml up --build
+```
+
+3. Запустите тесты:
+
+```
+docker exec test_e_journal_api pytest -v
+```
