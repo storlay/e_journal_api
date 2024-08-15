@@ -1,6 +1,5 @@
 from typing import Annotated
 
-from fastapi import Path
 from pydantic import (
     BaseModel,
     Field,
@@ -47,7 +46,3 @@ class UpdateStudentSchema(BaseModel):
 
 class StudentIdSchema(BaseModel):
     student_id: int
-
-
-class PathStudentIdSchema(BaseModel):
-    id: Annotated[int, Path(ge=1)]

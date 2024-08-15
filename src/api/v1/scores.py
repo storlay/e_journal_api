@@ -11,7 +11,6 @@ from src.api.pagination import (
 )
 from src.schemas.scores import (
     AddScoreSchema,
-    PathScoreIdSchema,
     ScoreSchema,
     ScoreIdSchema,
     UpdateScoreSchema,
@@ -55,7 +54,7 @@ async def get_all_scores(
 )
 async def get_score(
     transaction: TransactionDep,
-    score_id: PathScoreIdSchema = Depends(),
+    score_id: int,
 ) -> ScoreSchema:
     """
     Getting a score by ID.
@@ -65,7 +64,7 @@ async def get_score(
     """
     return await ScoresService.get_score(
         transaction,
-        score_id.id,
+        score_id,
     )
 
 
@@ -100,7 +99,7 @@ async def add_score(
 async def update_score(
     transaction: TransactionDep,
     new_score: UpdateScoreSchema,
-    score_id: PathScoreIdSchema = Depends(),
+    score_id: int,
 ) -> ScoreIdSchema:
     """
     Updating a score by ID.
@@ -111,7 +110,7 @@ async def update_score(
     """
     return await ScoresService.update_score(
         transaction,
-        score_id.id,
+        score_id,
         new_score,
     )
 
@@ -124,7 +123,7 @@ async def update_score(
 )
 async def delete_score(
     transaction: TransactionDep,
-    score_id: PathScoreIdSchema = Depends(),
+    score_id: int,
 ) -> None:
     """
     Deleting a score by ID.
@@ -134,5 +133,5 @@ async def delete_score(
     """
     await ScoresService.delete_score(
         transaction,
-        score_id.id,
+        score_id,
     )

@@ -11,7 +11,6 @@ from src.api.pagination import (
 )
 from src.schemas.students import (
     AddStudentSchema,
-    PathStudentIdSchema,
     StudentIdSchema,
     StudentSchema,
     UpdateStudentSchema,
@@ -55,7 +54,7 @@ async def get_all_students(
 )
 async def get_student(
     transaction: TransactionDep,
-    student_id: PathStudentIdSchema = Depends(),
+    student_id: int,
 ) -> StudentSchema:
     """
     Getting a student by ID.
@@ -65,7 +64,7 @@ async def get_student(
     """
     return await StudentsService.get_student(
         transaction,
-        student_id.id,
+        student_id,
     )
 
 
@@ -100,7 +99,7 @@ async def add_student(
 async def update_student(
     transaction: TransactionDep,
     student_data: UpdateStudentSchema,
-    student_id: PathStudentIdSchema = Depends(),
+    student_id: int,
 ) -> StudentIdSchema:
     """
     Updating a student by ID.
@@ -111,7 +110,7 @@ async def update_student(
     """
     return await StudentsService.update_student(
         transaction,
-        student_id.id,
+        student_id,
         student_data,
     )
 
@@ -124,7 +123,7 @@ async def update_student(
 )
 async def delete_student(
     transaction: TransactionDep,
-    student_id: PathStudentIdSchema = Depends(),
+    student_id: int,
 ) -> None:
     """
     Deleting a student by ID.
@@ -134,5 +133,5 @@ async def delete_student(
     """
     await StudentsService.delete_student(
         transaction,
-        student_id.id,
+        student_id,
     )
