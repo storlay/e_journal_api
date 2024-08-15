@@ -5,7 +5,6 @@ from datetime import (
 
 import factory
 import pytest
-from httpx import AsyncClient
 
 from src.config.config import settings
 from src.db.db import (
@@ -16,11 +15,13 @@ from src.db.db import (
 from src.models.scores import Scores
 from src.models.students import Students
 from src.models.utils import ClassNamesEnum
+from src.utils.transaction import TransactionManager
+from src.tests.utils import factory_to_dict
 
 
 class StudentsFactory(factory.alchemy.SQLAlchemyModelFactory):
     """
-    Creating a student with random data
+    Creating a student with random data.
     """
 
     class_name = factory.Faker(
@@ -35,7 +36,7 @@ class StudentsFactory(factory.alchemy.SQLAlchemyModelFactory):
     )
     age = factory.Faker(
         "pyint",
-        min_value=7,
+        min_value=8,
         max_value=25,
     )
 
@@ -46,7 +47,7 @@ class StudentsFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class ScoresFactory(factory.alchemy.SQLAlchemyModelFactory):
     """
-    Creating a score with random data
+    Creating a score with random data.
     """
 
     score = factory.Faker(
@@ -58,9 +59,7 @@ class ScoresFactory(factory.alchemy.SQLAlchemyModelFactory):
         "date_between",
         start_date=date.today() - timedelta(days=180),
     )
-    student_id = factory.SelfAttribute(
-        "student_id",
-    )
+    student = factory.SubFactory(StudentsFactory)
 
     class Meta:
         model = Scores
@@ -75,20 +74,19 @@ async def prepare_database():
     """
     Preparing a test database.
     """
+
     assert settings.MODE == "TEST"
 
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-
-@pytest.fixture(scope="function")
-async def ac():
-    """
-    Async client for testing endpoints
-    """
-    async with AsyncClient(base_url="http://localhost:8080") as ac:
-        yield ac
-
-
-VALID_STUDENT_DATA: StudentsFactory = StudentsFactory()
+    async with TransactionManager() as transaction:
+        for _ in range(10):
+            score: ScoresFactory = ScoresFactory.build()
+            student_data = factory_to_dict(score.student)
+            student_id = await transaction.students_repo.add_one(student_data)
+            score_data = factory_to_dict(score)
+            score_data["student_id"] = student_id
+            await transaction.scores_repo.add_one(score_data)
+        await transaction.commit()
