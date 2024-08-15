@@ -25,6 +25,11 @@ greenlet = "^3.0.3"
 testpaths = [
     "src",
 ]
+python_files = [
+    "tests_*.py",
+    "*_tests",
+    "tests_",
+]
 asyncio_mode = "auto"
 
 
