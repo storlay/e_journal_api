@@ -25,8 +25,6 @@ async_session = async_sessionmaker(
 
 
 class Base(DeclarativeBase):
-    id: None
-
     @declared_attr.directive
     @classmethod
     def __tablename__(cls) -> str:
